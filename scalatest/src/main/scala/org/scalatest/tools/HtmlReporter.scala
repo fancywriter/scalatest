@@ -32,7 +32,6 @@ import java.text.DecimalFormat
 import java.util.Iterator
 import java.util.Set
 import java.util.UUID
-import org.pegdown.PegDownProcessor
 import org.scalatest.exceptions.StackDepth
 import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
@@ -114,7 +113,20 @@ private[scalatest] class HtmlReporter(
     case Some(holder) => holder
     case None => new SuiteResultHolder()
   }
-  private val pegDown = new PegDownProcessor
+
+  val markdownToHtml: String => String = {
+    import com.vladsch.flexmark.formatter.internal.Formatter
+    import com.vladsch.flexmark.profiles.pegdown.Extensions
+    import com.vladsch.flexmark.profiles.pegdown.PegdownOptionsAdapter
+    import com.vladsch.flexmark.util.options.MutableDataSet
+    import com.vladsch.flexmark.parser.Parser
+
+    val options = PegdownOptionsAdapter.flexmarkOptions(Extensions.ALL)
+    val parser = Parser.builder(options).build()
+    val renderer = Formatter.builder(new MutableDataSet().set(Parser.EXTENSIONS, options.get(Parser.EXTENSIONS))).build()
+
+    s: String => renderer.render(parser.parse(s))
+  }
 
   private def withPossibleLineNumber(stringToPrint: String, throwable: Option[Throwable]): String = {
     throwable match {
@@ -901,7 +913,7 @@ private[scalatest] class HtmlReporter(
   // TODO: probably actually show the exception in the HTML report rather than blowing up the reporter, because that means
   // the whole suite doesn't get recorded. May want to do this more generally though.
   private def markup(elementId: String, text: String, indentLevel: Int, styleName: String) = {
-    val htmlString = convertAmpersand(convertSingleParaToDefinition(pegDown.markdownToHtml(text)))
+    val htmlString = convertAmpersand(convertSingleParaToDefinition(markdownToHtml(text)))
     <div id={ elementId } class={ styleName } style={ "margin-left: " + (specIndent * twoLess(indentLevel)) + "px;" }>
        {
          try XML.loadString(htmlString)

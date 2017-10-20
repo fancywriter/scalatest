@@ -47,7 +47,7 @@ object ScalatestBuild extends Build {
   val mockitoVersion = "1.10.19"
   val testngVersion = "6.7"
   val junitVersion = "4.12"
-  val pegdownVersion = "1.4.2"
+  val flexmarkVersion = "0.34.10"
 
   val githubTag = "release-3.1.0" // for scaladoc source urls
 
@@ -220,6 +220,8 @@ object ScalatestBuild extends Build {
       "org.scala-lang" % "scala-reflect" % theScalaVersion // this is needed to compile macro
     )
 
+  val flexmarkAll = "com.vladsch.flexmark" % "flexmark-all" % flexmarkVersion % "optional"
+
   def scalatestLibraryDependencies =
     Seq(
       "org.scala-sbt" % "test-interface" % "1.0" % "optional",
@@ -232,7 +234,7 @@ object ScalatestBuild extends Build {
       "org.seleniumhq.selenium" % "selenium-java" % "2.45.0" % "optional",
       "org.apache.ant" % "ant" % "1.7.1" % "optional",
       "org.ow2.asm" % "asm-all" % "4.1" % "optional",
-      "org.pegdown" % "pegdown" % pegdownVersion % "optional"
+      flexmarkAll
     )
 
   def crossBuildTestLibraryDependencies(theScalaVersion: String) = {
@@ -1225,8 +1227,7 @@ object ScalatestBuild extends Build {
       "junit" % "junit" % junitVersion % "optional",
       "org.testng" % "testng" % testngVersion % "optional",
       "org.jmock" % "jmock-legacy" % jmockVersion % "optional",
-      "org.pegdown" % "pegdown" % pegdownVersion % "optional"
-
+      flexmarkAll
     )
 
   def gentestsSharedSettings: Seq[Setting[_]] = Seq(
