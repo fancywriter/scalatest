@@ -3,6 +3,9 @@
 export SBT_OPTS="-server -Xms2G -Xmx2G -Xss10M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:NewRatio=8 -XX:MaxPermSize=512M -XX:-UseGCOverheadLimit"
 export MODE=$1
 
+# https://github.com/travis-ci/travis-ci/issues/9713
+if [[ $JAVA_HOME = *java-6* ]]; then jdk_switcher use openjdk6; fi
+
 if [[ $MODE = 'RegularTests1' ]] ; then
   echo "Doing 'sbt genRegularTests1/test'"
 
