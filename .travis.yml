@@ -70,11 +70,11 @@ matrix:
     - scala: "2.10.7"
       jdk: oraclejdk9
 
-branches:
-  only:
-    - 3.0.x
-    - 3.1.x
-    - 3.2.x
+#branches:
+#  only:
+#    - 3.0.x
+#    - 3.1.x
+#    - 3.2.x
 
 script: 
   - if [[ $JAVA_HOME = *java-6* ]]; then jdk_switcher use openjdk6; fi
