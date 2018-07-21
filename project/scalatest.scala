@@ -118,8 +118,10 @@ object ScalatestBuild extends Build {
     crossScalaVersions := Seq(buildScalaVersion, "2.10.6", "2.11.12"),
     version := releaseVersion,
     scalacOptions ++= Seq("-feature", "-target:jvm-1.6"),
-    resolvers += "Sonatype Public" at "https://oss.sonatype.org/content/groups/public",
-    resolvers -= DefaultMavenRepository,
+    resolvers ++= Seq(
+      "Sonatype Public" at "https://oss.sonatype.org/content/groups/public",
+      "Maven Central" at "http://repo1.maven.org/maven2/"
+    ),
     libraryDependencies ++= scalaLibraries(scalaVersion.value),
     /*publishTo <<= version { v: String =>
       val nexus = "https://oss.sonatype.org/"
@@ -1236,7 +1238,6 @@ object ScalatestBuild extends Build {
     scalaVersion := buildScalaVersion,
     scalacOptions ++= Seq("-feature"),
     resolvers += "Sonatype Public" at "https://oss.sonatype.org/content/groups/public",
-    resolvers -= DefaultMavenRepository,
     libraryDependencies ++= crossBuildLibraryDependencies.value,
     libraryDependencies ++= gentestsLibraryDependencies,
     testOptions in Test := Seq(Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/html"))
